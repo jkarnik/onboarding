@@ -100,11 +100,15 @@ sample error to demo failure handling). Cannot advance until "connected."
 **Step 2 — Select scope**
 A three-level nested checklist: **Orgs → Sites → Devices**. Expand an org to see
 its sites; expand a site to see its devices. Selecting a parent selects its
-children. A **text filter box** at the top does **visual filtering only** — it
-narrows which rows are shown (matching typed text against site/device names) but
-never changes selection. Clearing the filter restores the full tree with
-selections intact. Selections here drive the list-page scope summary and the
-Step 4 tagging preview.
+children. A **filter box** at the top does **visual filtering only** — it
+narrows which rows are shown (matching against site/device names) but never
+changes selection. The filter has a **mode toggle**:
+- **Text** (default): case-insensitive substring match.
+- **Regex**: the input is compiled as a regular expression; an invalid pattern
+  shows an inline "invalid regex" hint and leaves the tree unfiltered.
+
+Clearing the filter restores the full tree with selections intact. Selections
+here drive the list-page scope summary and the Step 4 tagging preview.
 
 **Step 3 — Name & settings**
 A **display name** (pre-filled with a sensible default, e.g. "Juniper Mist –
