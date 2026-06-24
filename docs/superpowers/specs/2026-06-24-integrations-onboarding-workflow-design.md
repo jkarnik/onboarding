@@ -206,6 +206,41 @@ interface Integration {
   `TextField`, `Select`, `Checkbox`.
 - `integrationsStore` + fixtures — mock data/persistence layer.
 
+## Deployment (AWS Amplify Hosting)
+
+The app builds to a static SPA (`dist/`), so it deploys on Amplify Hosting with
+no backend. Required pieces, shipped as part of the implementation:
+
+- **`amplify.yml`** build spec at the repo root:
+
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+- **SPA rewrite rule** (Amplify console → Rewrites and redirects, or via the
+  app config): source `/<*>`, target `/index.html`, type `200 (Rewrite)`. This
+  makes client-side routes and deep-link refreshes resolve to the SPA instead
+  of 404ing.
+- **No env vars or secrets** — nothing talks to a backend; `localStorage` is
+  the only persistence.
+- **Workflow:** connect the Git repo in Amplify; it builds and deploys on each
+  push to the tracked branch.
+
 ## Open Questions / Resolved Decisions
 
 - **Resolved:** Catalog has a few real integration types; the rest are
@@ -217,3 +252,5 @@ interface Integration {
 - **Resolved:** Tagging preview matches against the Step 2 selection only.
 - **Resolved:** Edit opens the wizard on the Review step, pre-filled.
 - **Resolved:** Placement is a new "Integrations" tab under Juniper Mist.
+- **Resolved:** Deploys on AWS Amplify Hosting as a static SPA (`amplify.yml`
+  + SPA rewrite rule included).
