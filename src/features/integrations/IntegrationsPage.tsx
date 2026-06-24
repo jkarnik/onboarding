@@ -6,6 +6,7 @@ import { EmptyState } from './components/EmptyState'
 import { Button } from '../../components/ui/Button'
 import { CatalogModal } from './catalog/CatalogModal'
 import { SetupWizard } from './wizard/SetupWizard'
+import { DeleteDialog } from './components/DeleteDialog'
 
 type View =
   | { mode: 'list' }
@@ -20,7 +21,6 @@ export function IntegrationsPage() {
   const reload = () => setItems(listIntegrations())
   const openCatalog = () => setView({ mode: 'catalog' })
 
-  // Temporary delete confirm (replaced by DeleteDialog in Task 14)
   const confirmDelete = () => {
     if (deleteTarget) { removeIntegration(deleteTarget.id); setDeleteTarget(null); reload() }
   }
@@ -32,13 +32,13 @@ export function IntegrationsPage() {
         {items.length > 0 && <Button onClick={openCatalog}>+ Add integration</Button>}
       </header>
 
-      {items.length === 0
+      {view.mode !== 'wizard' && (items.length === 0
         ? <EmptyState onBrowse={openCatalog} />
         : <IntegrationList
             integrations={items}
             onEdit={(i) => setView({ mode: 'wizard', type: i.type, editing: i })}
             onDelete={(i) => setDeleteTarget(i)}
-          />}
+          />)}
 
       <CatalogModal
         open={view.mode === 'catalog'}
@@ -55,11 +55,11 @@ export function IntegrationsPage() {
       )}
 
       {deleteTarget && (
-        <div role="dialog" aria-label="Confirm delete">
-          <span>Delete {deleteTarget.name}?</span>
-          <Button variant="danger" onClick={confirmDelete}>Delete</Button>
-          <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancel</Button>
-        </div>
+        <DeleteDialog
+          integration={deleteTarget}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
+        />
       )}
     </div>
   )

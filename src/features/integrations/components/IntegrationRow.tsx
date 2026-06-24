@@ -19,8 +19,8 @@ export function IntegrationRow({
       <div style={{ color: 'var(--muted)', fontSize: 13 }}>{integration.scopeSummary}</div>
       <div style={{ color: 'var(--muted)', fontSize: 13 }}>2 min ago</div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <Button variant="ghost" onClick={() => onEdit(integration)}>Edit</Button>
-        <Button variant="ghost" onClick={() => onDelete(integration)}>Delete</Button>
+        <Button variant="ghost" onClick={() => onEdit(integration)} aria-label={`Edit ${integration.name}`}>Edit</Button>
+        <Button variant="ghost" onClick={() => onDelete(integration)} aria-label={`Delete ${integration.name}`}>Delete</Button>
       </div>
     </div>
   )
