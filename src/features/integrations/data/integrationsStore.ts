@@ -1,7 +1,15 @@
 import type { Integration, OrgNode, ScopeSelection } from '../types'
 
 const KEY = 'onboarding.integrations.v1'
+const SEQ_KEY = 'onboarding.integrations.seq.v1'
 const FIXED_SYNC = '2026-06-24T00:00:00.000Z'
+
+function nextSeq(): number {
+  const current = Number(localStorage.getItem(SEQ_KEY) ?? '0')
+  const next = current + 1
+  localStorage.setItem(SEQ_KEY, String(next))
+  return next
+}
 
 function read(): Integration[] {
   try { return JSON.parse(localStorage.getItem(KEY) ?? '[]') } catch { return [] }
@@ -25,7 +33,7 @@ export function createIntegration(
   const tree: OrgNode[] = []
   const created: Integration = {
     ...draft,
-    id: `int-${items.length + 1}-${items.reduce((n, i) => n + i.id.length, 1)}`,
+    id: `int-${nextSeq()}`,
     status: 'connected',
     lastSyncedAt: FIXED_SYNC,
     scopeSummary: deriveScopeSummary(draft.scope, tree),

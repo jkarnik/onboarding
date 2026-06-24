@@ -39,3 +39,12 @@ test('persists across store reloads via localStorage', () => {
   createIntegration(draft)
   expect(localStorage.getItem('onboarding.integrations.v1')).not.toBeNull()
 })
+
+test('C1 regression: ids stay unique after delete+recreate', () => {
+  const a = createIntegration(draft)
+  createIntegration(draft)
+  removeIntegration(a.id)
+  createIntegration(draft)
+  const ids = listIntegrations().map((i) => i.id)
+  expect(new Set(ids).size).toBe(ids.length)
+})

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import type { WizardDraft } from '../draft'
 import type { TaggingRule } from '../../types'
 import { getAvailableTree } from '../../data/fixtures'
@@ -15,9 +15,15 @@ const TARGETS = [
 
 export function StepTaggingRules({ draft, setDraft }: { draft: WizardDraft; setDraft: React.Dispatch<React.SetStateAction<WizardDraft>> }) {
   const tree = useMemo(() => getAvailableTree(draft.type), [draft.type])
+  const seqRef = useRef(
+    draft.taggingRules.reduce((max, r) => {
+      const n = Number(r.id.replace(/^rule-/, ''))
+      return Number.isFinite(n) && n > max ? n : max
+    }, -1) + 1
+  )
 
   const update = (rules: TaggingRule[]) => setDraft((d) => ({ ...d, taggingRules: rules }))
-  const addRule = () => update([...draft.taggingRules, { id: `rule-${draft.taggingRules.length}`, pattern: '', target: 'sites', tag: '' }])
+  const addRule = () => { const id = `rule-${seqRef.current++}`; update([...draft.taggingRules, { id, pattern: '', target: 'sites', tag: '' }]) }
   const patch = (id: string, p: Partial<TaggingRule>) => update(draft.taggingRules.map((r) => r.id === id ? { ...r, ...p } : r))
   const remove = (id: string) => update(draft.taggingRules.filter((r) => r.id !== id))
 
