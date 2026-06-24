@@ -6,6 +6,7 @@ import { Modal } from '../../../components/ui/Modal'
 import { createIntegration, updateIntegration } from '../data/integrationsStore'
 import { initDraft, STEP_KEYS, canAdvance, type WizardDraft, type StepKey } from './draft'
 import { StepConnect } from './steps/StepConnect'
+import { StepScope } from './steps/StepScope'
 
 const STEP_META = [
   { key: 'connect', label: 'Connect' },
@@ -74,7 +75,7 @@ export function SetupWizard({
         <div style={{ marginTop: 20 }}>
           {/* Step bodies plugged in Tasks 9–13 */}
           {step === 'connect' && <StepConnect draft={draft} setDraft={setDraft} />}
-          {step === 'scope' && <div data-testid="body-scope" />}
+          {step === 'scope' && <StepScope draft={draft} setDraft={setDraft} />}
           {step === 'name' && <div data-testid="body-name" />}
           {step === 'tagging' && <div data-testid="body-tagging" />}
           {step === 'review' && <div data-testid="body-review" />}
