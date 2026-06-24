@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppShell } from './components/AppShell/AppShell'
 import { DashboardPage } from './pages/DashboardPage'
+import { IntegrationsPage } from './features/integrations/IntegrationsPage'
 
 export default function App() {
   return (
@@ -8,7 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/configure" element={<div>Configure</div>} />
-        <Route path="/integrations" element={<div data-testid="integrations-route">Integrations</div>} />
+        <Route path="/integrations" element={<IntegrationsPage />} />
       </Routes>
     </AppShell>
   )
