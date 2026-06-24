@@ -24,10 +24,10 @@ test('lists integrations when present', () => {
   expect(screen.getByText('Connected')).toBeInTheDocument()
 })
 
-test('clicking Add opens the catalog placeholder', async () => {
+test('clicking Add opens the catalog modal', async () => {
   render(<IntegrationsPage />)
   await userEvent.click(screen.getByRole('button', { name: /add integration/i }))
-  expect(screen.getByTestId('catalog-placeholder')).toBeInTheDocument()
+  expect(screen.getByText('Add an integration')).toBeInTheDocument()
 })
 
 test.skip('delete removes the row and falls back to empty state', async () => {

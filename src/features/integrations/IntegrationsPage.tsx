@@ -4,6 +4,7 @@ import { listIntegrations, removeIntegration } from './data/integrationsStore'
 import { IntegrationList } from './components/IntegrationList'
 import { EmptyState } from './components/EmptyState'
 import { Button } from '../../components/ui/Button'
+import { CatalogModal } from './catalog/CatalogModal'
 
 type View =
   | { mode: 'list' }
@@ -38,7 +39,11 @@ export function IntegrationsPage() {
             onDelete={(i) => setDeleteTarget(i)}
           />}
 
-      {view.mode === 'catalog' && <div data-testid="catalog-placeholder" />}
+      <CatalogModal
+        open={view.mode === 'catalog'}
+        onClose={() => setView({ mode: 'list' })}
+        onSelect={(type) => setView({ mode: 'wizard', type })}
+      />
       {view.mode === 'wizard' && <div data-testid="wizard-placeholder" />}
 
       {deleteTarget && (
