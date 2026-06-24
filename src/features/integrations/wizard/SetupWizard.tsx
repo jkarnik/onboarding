@@ -8,6 +8,7 @@ import { initDraft, STEP_KEYS, canAdvance, type WizardDraft, type StepKey } from
 import { StepConnect } from './steps/StepConnect'
 import { StepScope } from './steps/StepScope'
 import { StepNameSettings } from './steps/StepNameSettings'
+import { StepTaggingRules } from './steps/StepTaggingRules'
 
 const STEP_META = [
   { key: 'connect', label: 'Connect' },
@@ -78,7 +79,7 @@ export function SetupWizard({
           {step === 'connect' && <StepConnect draft={draft} setDraft={setDraft} />}
           {step === 'scope' && <StepScope draft={draft} setDraft={setDraft} />}
           {step === 'name' && <StepNameSettings draft={draft} setDraft={setDraft} />}
-          {step === 'tagging' && <div data-testid="body-tagging" />}
+          {step === 'tagging' && <StepTaggingRules draft={draft} setDraft={setDraft} />}
           {step === 'review' && <div data-testid="body-review" />}
         </div>
       </Modal>
