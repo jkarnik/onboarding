@@ -5,6 +5,7 @@ import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
 import { createIntegration, updateIntegration } from '../data/integrationsStore'
 import { initDraft, STEP_KEYS, canAdvance, type WizardDraft, type StepKey } from './draft'
+import { StepConnect } from './steps/StepConnect'
 
 const STEP_META = [
   { key: 'connect', label: 'Connect' },
@@ -17,7 +18,7 @@ const STEP_META = [
 export function SetupWizard({
   type, editing, onClose, onComplete,
 }: { type: string; editing?: Integration; onClose: () => void; onComplete: () => void }) {
-  const [draft] = useState<WizardDraft>(() => initDraft(type, editing))
+  const [draft, setDraft] = useState<WizardDraft>(() => initDraft(type, editing))
   const [index, setIndex] = useState(editing ? STEP_KEYS.indexOf('review') : 0)
   const [done, setDone] = useState(false)
   const [confirmClose, setConfirmClose] = useState(false)
@@ -72,7 +73,7 @@ export function SetupWizard({
         <ProgressSteps steps={STEP_META} activeIndex={index} onStepClick={editing ? (i) => setIndex(i) : undefined} />
         <div style={{ marginTop: 20 }}>
           {/* Step bodies plugged in Tasks 9–13 */}
-          {step === 'connect' && <div data-testid="body-connect" />}
+          {step === 'connect' && <StepConnect draft={draft} setDraft={setDraft} />}
           {step === 'scope' && <div data-testid="body-scope" />}
           {step === 'name' && <div data-testid="body-name" />}
           {step === 'tagging' && <div data-testid="body-tagging" />}
