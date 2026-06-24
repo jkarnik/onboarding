@@ -1,7 +1,15 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
-test('renders the app shell with Integrations nav', () => {
-  render(<App />)
-  expect(screen.getByText('Integrations')).toBeInTheDocument()
+beforeEach(() => localStorage.clear())
+
+test('shows the Integrations nav link', () => {
+  render(<MemoryRouter><App /></MemoryRouter>)
+  expect(screen.getByRole('link', { name: 'Integrations' })).toBeInTheDocument()
+})
+
+test('navigates to the integrations route', () => {
+  render(<MemoryRouter initialEntries={['/integrations']}><App /></MemoryRouter>)
+  expect(screen.getByText(/connect your first integration/i)).toBeInTheDocument()
 })

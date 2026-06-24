@@ -17,7 +17,7 @@ const STEP_META = [
 export function SetupWizard({
   type, editing, onClose, onComplete,
 }: { type: string; editing?: Integration; onClose: () => void; onComplete: () => void }) {
-  const [draft, setDraft] = useState<WizardDraft>(() => initDraft(type, editing))
+  const [draft] = useState<WizardDraft>(() => initDraft(type, editing))
   const [index, setIndex] = useState(editing ? STEP_KEYS.indexOf('review') : 0)
   const [done, setDone] = useState(false)
   const [confirmClose, setConfirmClose] = useState(false)
