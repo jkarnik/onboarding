@@ -5,6 +5,7 @@ import { IntegrationList } from './components/IntegrationList'
 import { EmptyState } from './components/EmptyState'
 import { Button } from '../../components/ui/Button'
 import { CatalogModal } from './catalog/CatalogModal'
+import { SetupWizard } from './wizard/SetupWizard'
 
 type View =
   | { mode: 'list' }
@@ -44,7 +45,14 @@ export function IntegrationsPage() {
         onClose={() => setView({ mode: 'list' })}
         onSelect={(type) => setView({ mode: 'wizard', type })}
       />
-      {view.mode === 'wizard' && <div data-testid="wizard-placeholder" />}
+      {view.mode === 'wizard' && (
+        <SetupWizard
+          type={view.type}
+          editing={view.editing}
+          onClose={() => setView({ mode: 'list' })}
+          onComplete={reload}
+        />
+      )}
 
       {deleteTarget && (
         <div role="dialog" aria-label="Confirm delete">
