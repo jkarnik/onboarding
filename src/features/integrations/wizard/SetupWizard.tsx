@@ -1,14 +1,18 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Integration } from '../types'
 import { ProgressSteps } from '../../../components/ui/ProgressSteps'
 import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
-import { createIntegration, updateIntegration } from '../data/integrationsStore'
+import { createIntegration, updateIntegration, deriveScopeSummary } from '../data/integrationsStore'
+import { getAvailableTree } from '../data/fixtures'
 import { initDraft, STEP_KEYS, canAdvance, type WizardDraft, type StepKey } from './draft'
 import { StepConnect } from './steps/StepConnect'
 import { StepScope } from './steps/StepScope'
 import { StepNameSettings } from './steps/StepNameSettings'
 import { StepTaggingRules } from './steps/StepTaggingRules'
+import { StepReview } from './steps/StepReview'
+import { WizardSuccess } from './steps/WizardSuccess'
 
 const STEP_META = [
   { key: 'connect', label: 'Connect' },
@@ -21,12 +25,14 @@ const STEP_META = [
 export function SetupWizard({
   type, editing, onClose, onComplete,
 }: { type: string; editing?: Integration; onClose: () => void; onComplete: () => void }) {
+  const navigate = useNavigate()
   const [draft, setDraft] = useState<WizardDraft>(() => initDraft(type, editing))
   const [index, setIndex] = useState(editing ? STEP_KEYS.indexOf('review') : 0)
   const [done, setDone] = useState(false)
   const [confirmClose, setConfirmClose] = useState(false)
 
   const step = STEP_KEYS[index] as StepKey
+  const goTo = (key: StepKey) => setIndex(STEP_KEYS.indexOf(key))
   const isLast = step === 'review'
 
   const submit = () => {
@@ -49,10 +55,12 @@ export function SetupWizard({
   if (done) {
     return (
       <Modal open title="Done" onClose={() => { onComplete(); onClose() }}>
-        <div data-testid="wizard-success">
-          <p>✓ Integration connected.</p>
-          <Button onClick={() => { onComplete(); onClose() }}>Done</Button>
-        </div>
+        <WizardSuccess
+          name={draft.name}
+          scopeSummary={deriveScopeSummary(draft.scope, getAvailableTree(draft.type))}
+          onViewDashboard={() => { onComplete(); onClose(); navigate('/') }}
+          onDone={() => { onComplete(); onClose() }}
+        />
       </Modal>
     )
   }
@@ -80,7 +88,7 @@ export function SetupWizard({
           {step === 'scope' && <StepScope draft={draft} setDraft={setDraft} />}
           {step === 'name' && <StepNameSettings draft={draft} setDraft={setDraft} />}
           {step === 'tagging' && <StepTaggingRules draft={draft} setDraft={setDraft} />}
-          {step === 'review' && <div data-testid="body-review" />}
+          {step === 'review' && <StepReview draft={draft} onEditStep={goTo} />}
         </div>
       </Modal>
 

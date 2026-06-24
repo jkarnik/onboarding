@@ -1,16 +1,17 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, expect, test } from 'vitest'
 import { SetupWizard } from './SetupWizard'
 
 beforeEach(() => localStorage.clear())
 
 test('Next is disabled on Connect until connection is tested', () => {
-  render(<SetupWizard type="juniper-mist" onClose={() => {}} onComplete={() => {}} />)
+  render(<MemoryRouter><SetupWizard type="juniper-mist" onClose={() => {}} onComplete={() => {}} /></MemoryRouter>)
   expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
 })
 
 test('shows the five step labels including optional tagging', () => {
-  render(<SetupWizard type="juniper-mist" onClose={() => {}} onComplete={() => {}} />)
+  render(<MemoryRouter><SetupWizard type="juniper-mist" onClose={() => {}} onComplete={() => {}} /></MemoryRouter>)
   expect(screen.getByText('Connect')).toBeInTheDocument()
   expect(screen.getByText(/tagging \(optional\)/i)).toBeInTheDocument()
   expect(screen.getByText('Review')).toBeInTheDocument()
