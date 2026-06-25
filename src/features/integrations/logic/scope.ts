@@ -62,6 +62,32 @@ export function orgState(tree: OrgNode[], sel: ScopeSelection, orgId: string) {
   return { checked: all && org.sites.length > 0, indeterminate: some && !all }
 }
 
+export function collectScope(tree: OrgNode[]): ScopeSelection {
+  return {
+    orgIds: tree.map((o) => o.id),
+    siteIds: tree.flatMap((o) => o.sites.map((s) => s.id)),
+    deviceIds: tree.flatMap((o) => o.sites.flatMap((s) => s.devices.map((d) => d.id))),
+  }
+}
+
+export function selectAll(sel: ScopeSelection, tree: OrgNode[]): ScopeSelection {
+  const all = collectScope(tree)
+  return {
+    orgIds: add(sel.orgIds, all.orgIds),
+    siteIds: add(sel.siteIds, all.siteIds),
+    deviceIds: add(sel.deviceIds, all.deviceIds),
+  }
+}
+
+export function deselectAll(sel: ScopeSelection, tree: OrgNode[]): ScopeSelection {
+  const all = collectScope(tree)
+  return {
+    orgIds: remove(sel.orgIds, all.orgIds),
+    siteIds: remove(sel.siteIds, all.siteIds),
+    deviceIds: remove(sel.deviceIds, all.deviceIds),
+  }
+}
+
 export function filterTree(tree: OrgNode[], query: string, mode: 'text' | 'regex'): { tree: OrgNode[]; error?: string } {
   if (!query.trim()) return { tree }
   let test: (name: string) => boolean

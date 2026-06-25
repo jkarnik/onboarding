@@ -1,5 +1,6 @@
 import type { Integration, ScopeSelection, TaggingRule } from '../types'
-import { emptySelection } from '../logic/scope'
+import { collectScope } from '../logic/scope'
+import { getAvailableTree } from '../data/fixtures'
 
 export interface WizardDraft {
   type: string
@@ -30,7 +31,8 @@ export function initDraft(type: string, editing?: Integration): WizardDraft {
   return {
     type,
     connection: { token: '', region: 'global', orgId: '', tested: false },
-    scope: emptySelection(),
+    // Everything is preselected by default; users narrow down from there.
+    scope: collectScope(getAvailableTree(type)),
     name: DEFAULT_NAME[type] ?? '',
     environmentTag: '',
     taggingRules: [],
