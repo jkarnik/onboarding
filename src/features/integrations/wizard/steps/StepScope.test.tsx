@@ -4,9 +4,12 @@ import { useState } from 'react'
 import { expect, test } from 'vitest'
 import { StepScope } from './StepScope'
 import { initDraft, type WizardDraft } from '../draft'
+import { emptySelection } from '../../logic/scope'
 
 function Harness() {
-  const [draft, setDraft] = useState<WizardDraft>(() => initDraft('juniper-mist'))
+  // Start from an empty selection so these tests exercise toggle/select-all
+  // logic directly (initDraft now preselects everything by default).
+  const [draft, setDraft] = useState<WizardDraft>(() => ({ ...initDraft('juniper-mist'), scope: emptySelection() }))
   return <>
     <StepScope draft={draft} setDraft={setDraft} />
     <span data-testid="sites">{draft.scope.siteIds.join(',')}</span>
