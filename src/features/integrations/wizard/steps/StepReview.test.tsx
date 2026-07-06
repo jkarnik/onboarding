@@ -4,7 +4,7 @@ import { expect, test, vi } from 'vitest'
 import { StepReview } from './StepReview'
 import { initDraft } from '../draft'
 
-const draft = { ...initDraft('juniper-mist'), name: 'My Mist', connection: { token: 'abcd1234', region: 'global', orgId: '', tested: true }, scope: { orgIds: ['o1'], siteIds: ['s1'], deviceIds: [] } }
+const draft = { ...initDraft('juniper-mist'), name: 'My Mist', connection: { token: 'abcd1234', region: 'global', tested: true }, scope: { orgIds: ['o1'], siteIds: ['s1'], deviceIds: [] } }
 
 test('shows masked token and lets you jump to a step', async () => {
   const onEditStep = vi.fn()

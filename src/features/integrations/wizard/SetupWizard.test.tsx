@@ -10,9 +10,11 @@ test('Next is disabled on Connect until connection is tested', () => {
   expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
 })
 
-test('shows the five step labels including optional tagging', () => {
+test('shows the four step labels including optional tagging', () => {
   render(<MemoryRouter><SetupWizard type="juniper-mist" onClose={() => {}} onComplete={() => {}} /></MemoryRouter>)
   expect(screen.getByText('Connect')).toBeInTheDocument()
+  expect(screen.getByText('Select scope')).toBeInTheDocument()
   expect(screen.getByText(/tagging \(optional\)/i)).toBeInTheDocument()
   expect(screen.getByText('Review')).toBeInTheDocument()
+  expect(screen.queryByText('Name & settings')).not.toBeInTheDocument()
 })

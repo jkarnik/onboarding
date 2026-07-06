@@ -28,10 +28,13 @@ export function StepConnect({ draft, setDraft }: { draft: WizardDraft; setDraft:
 
   return (
     <div>
+      <TextField label="Connection Name" value={draft.name}
+        onChange={(v) => setDraft((d) => ({ ...d, name: v }))}
+        error={draft.name.trim() ? undefined : 'Connection name is required'}
+        placeholder="e.g. Juniper Mist – Global" />
       <TextField label="API token" type="password" value={draft.connection.token}
         onChange={(v) => { setConn({ token: v, tested: false }); setError(undefined) }} placeholder="Paste your Mist API token" />
       <Select label="Region / cloud" value={draft.connection.region} onChange={(v) => setConn({ region: v, tested: false })} options={REGIONS} />
-      <TextField label="Org ID (optional)" value={draft.connection.orgId} onChange={(v) => setConn({ orgId: v })} placeholder="e.g. 0000-aaaa" />
       <Button variant="ghost" disabled={!draft.connection.token || testing} onClick={test}>
         {testing ? 'Testing…' : 'Test connection'}
       </Button>

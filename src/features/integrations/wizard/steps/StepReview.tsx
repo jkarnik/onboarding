@@ -16,9 +16,9 @@ export function StepReview({ draft, onEditStep }: { draft: WizardDraft; onEditSt
   const masked = draft.connection.token ? `••••${draft.connection.token.slice(-4)}` : '— (unchanged)'
   return (
     <div>
+      <Row label="Connection name" onEdit={() => onEditStep('connect')}>{draft.name}</Row>
       <Row label="Connection" onEdit={() => onEditStep('connect')}>Token {masked} · {draft.connection.region.toUpperCase()}</Row>
       <Row label="Scope" onEdit={() => onEditStep('scope')}>{summary}</Row>
-      <Row label="Name & tag" onEdit={() => onEditStep('name')}>{draft.name}{draft.environmentTag ? ` · ${draft.environmentTag}` : ''}</Row>
       <Row label="Tagging rules" onEdit={() => onEditStep('tagging')}>
         {draft.taggingRules.length ? draft.taggingRules.map((r) => `${r.tag} (/${r.pattern}/)`).join(', ') : 'None'}
       </Row>

@@ -9,7 +9,6 @@ import { getAvailableTree } from '../data/fixtures'
 import { initDraft, STEP_KEYS, canAdvance, type WizardDraft, type StepKey } from './draft'
 import { StepConnect } from './steps/StepConnect'
 import { StepScope } from './steps/StepScope'
-import { StepNameSettings } from './steps/StepNameSettings'
 import { StepTaggingRules } from './steps/StepTaggingRules'
 import { StepReview } from './steps/StepReview'
 import { WizardSuccess } from './steps/WizardSuccess'
@@ -17,7 +16,6 @@ import { WizardSuccess } from './steps/WizardSuccess'
 const STEP_META = [
   { key: 'connect', label: 'Connect' },
   { key: 'scope', label: 'Select scope' },
-  { key: 'name', label: 'Name & settings' },
   { key: 'tagging', label: 'Tagging', optional: true },
   { key: 'review', label: 'Review' },
 ]
@@ -37,8 +35,8 @@ export function SetupWizard({
 
   const submit = () => {
     const payload = {
-      type: draft.type, name: draft.name, environmentTag: draft.environmentTag || undefined,
-      connection: { region: draft.connection.region, orgId: draft.connection.orgId || undefined, tokenLast4: draft.connection.token.slice(-4) || undefined },
+      type: draft.type, name: draft.name,
+      connection: { region: draft.connection.region, tokenLast4: draft.connection.token.slice(-4) || undefined },
       scope: draft.scope, taggingRules: draft.taggingRules,
     }
     if (editing) updateIntegration(editing.id, payload)
@@ -86,7 +84,6 @@ export function SetupWizard({
           {/* Step bodies plugged in Tasks 9–13 */}
           {step === 'connect' && <StepConnect draft={draft} setDraft={setDraft} />}
           {step === 'scope' && <StepScope draft={draft} setDraft={setDraft} />}
-          {step === 'name' && <StepNameSettings draft={draft} setDraft={setDraft} />}
           {step === 'tagging' && <StepTaggingRules draft={draft} setDraft={setDraft} />}
           {step === 'review' && <StepReview draft={draft} onEditStep={goTo} />}
         </div>

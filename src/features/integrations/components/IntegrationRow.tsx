@@ -1,6 +1,7 @@
 import type { Integration } from '../types'
 import { StatusPill } from '../../../components/ui/StatusPill'
 import { Button } from '../../../components/ui/Button'
+import { VendorIcon } from './VendorIcon'
 
 export function IntegrationRow({
   integration, onEdit, onDelete,
@@ -11,9 +12,12 @@ export function IntegrationRow({
       alignItems: 'center', gap: 12, padding: 14,
       borderBottom: '1px solid var(--border)',
     }}>
-      <div>
-        <div style={{ fontWeight: 600 }}>{integration.name}</div>
-        <div style={{ fontSize: 12, color: 'var(--muted)' }}>{integration.type}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+        <VendorIcon type={integration.type} />
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{integration.name}</div>
+          <div style={{ fontSize: 12, color: 'var(--muted)' }}>{integration.type}</div>
+        </div>
       </div>
       <StatusPill status={integration.status} />
       <div style={{ color: 'var(--muted)', fontSize: 13 }}>{integration.scopeSummary}</div>
