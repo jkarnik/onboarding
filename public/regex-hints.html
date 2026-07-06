@@ -44,29 +44,127 @@
     <main>
       <h1>Regex tagging hints</h1>
       <p class="lede">Reference patterns for auto-tagging sites and devices from their naming conventions.</p>
-      <article id="content"><p class="lede">Loading…</p></article>
-    </main>
+      <article id="content">
+        <p><strong>Named Capturing Groups</strong> <code>(?&lt;name&gt;pattern)</code></p>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
-    <script>
-      (async () => {
-        const el = document.getElementById('content')
-        try {
-          const res = await fetch('regex.md', { cache: 'no-store' })
-          if (!res.ok) throw new Error('HTTP ' + res.status)
-          const md = await res.text()
-          if (window.marked) {
-            el.innerHTML = window.marked.parse(md)
-          } else {
-            // Fallback: show the raw markdown if the renderer failed to load.
-            const pre = document.createElement('pre')
-            pre.textContent = md
-            el.replaceChildren(pre)
-          }
-        } catch (e) {
-          el.innerHTML = '<p class="error">Could not load hints (' + e.message + ').</p>'
-        }
-      })()
-    </script>
+        <p>Automatically extract meaningful metadata (like region, site type, site ID, and device role) directly from device hostnames, SNMP sysNames, or interface descriptions. This turns static naming conventions into faceted, filterable dimensions within New Relic.</p>
+
+        <p>Sample regex tagging patterns:</p>
+
+        <hr />
+
+        <h3>1. Retail &amp; Restaurant Chains (Store-Centric)</h3>
+
+        <p><strong>Naming Convention:</strong> <code>[Region]-[City]-[StoreNumber]-[DeviceRole][Number]</code><br />
+        <strong>Sample Device Name:</strong> <code>NA-CHI-STR0842-RTR01</code></p>
+
+        <p><strong>Regex Pattern:</strong></p>
+
+        <pre><code>^(?&lt;Region&gt;[A-Z]{2})-(?&lt;City&gt;[A-Z]{3})-(?&lt;SiteType&gt;STR)(?&lt;SiteID&gt;\d{4})-(?&lt;DeviceRole&gt;[A-Z]{3})(?&lt;DeviceID&gt;\d{2})$</code></pre>
+
+        <p><strong>Extracted Tags:</strong></p>
+
+        <ul>
+          <li><code>Region</code>: NA</li>
+          <li><code>City</code>: CHI</li>
+          <li><code>SiteType</code>: STR (Store)</li>
+          <li><code>SiteID</code>: 0842</li>
+          <li><code>DeviceRole</code>: RTR (Router)</li>
+          <li><code>DeviceID</code>: 01</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. Banking &amp; Financial Institutions (Branch &amp; ATM Focus)</h3>
+
+        <p><strong>Naming Convention:</strong> <code>[Country]-[State]-[BranchCode]-[DeviceType]-[Number]</code><br />
+        <strong>Sample Device Name:</strong> <code>US-TX-BR491-ATM-04</code></p>
+
+        <p><strong>Regex Pattern:</strong></p>
+
+        <pre><code>^(?&lt;Country&gt;[A-Z]{2})-(?&lt;State&gt;[A-Z]{2})-(?&lt;SiteType&gt;BR)(?&lt;BranchID&gt;\d{3})-(?&lt;DeviceType&gt;[A-Z]{3})-(?&lt;DeviceID&gt;\d{2})$</code></pre>
+
+        <p><strong>Extracted Tags:</strong></p>
+
+        <ul>
+          <li><code>Country</code>: US</li>
+          <li><code>State</code>: TX</li>
+          <li><code>SiteType</code>: BR (Branch)</li>
+          <li><code>BranchID</code>: 491</li>
+          <li><code>DeviceType</code>: ATM</li>
+          <li><code>DeviceID</code>: 04</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. Hospital Systems &amp; Healthcare (Campus &amp; Wing Focus)</h3>
+
+        <p><strong>Naming Convention:</strong> <code>[CampusCode]-[Building/Wing]-[Floor]-[DeviceRole]</code><br />
+        <strong>Sample Device Name:</strong> <code>MGH-WINGB-FL03-SWCORE</code></p>
+
+        <p><strong>Regex Pattern:</strong></p>
+
+        <pre><code>^(?&lt;Campus&gt;[A-Z0-9]+)-(?&lt;Building&gt;[A-Z]+)-(?&lt;Floor&gt;FL\d{2})-(?&lt;DeviceRole&gt;[A-Z]+)$</code></pre>
+
+        <p><strong>Extracted Tags:</strong></p>
+
+        <ul>
+          <li><code>Campus</code>: MGH (Mass General Hospital)</li>
+          <li><code>Building</code>: WINGB</li>
+          <li><code>Floor</code>: FL03</li>
+          <li><code>DeviceRole</code>: SWCORE (Core Switch)</li>
+        </ul>
+
+        <hr />
+
+        <h3>4. Logistics, Shipping &amp; Manufacturing (Warehouse &amp; Plant Focus)</h3>
+
+        <p><strong>Naming Convention:</strong> <code>[FacilityType]-[AirportCode]-[Zone]-[DeviceType]</code><br />
+        <strong>Sample Device Name:</strong> <code>WHSE-DFW-ZONE4-WLC02</code></p>
+
+        <p><strong>Regex Pattern:</strong></p>
+
+        <pre><code>^(?&lt;FacilityType&gt;WHSE|PLNT|HUB)-(?&lt;LocationCode&gt;[A-Z]{3})-(?&lt;Zone&gt;ZONE\d+)-(?&lt;DeviceType&gt;[A-Z]{3})(?&lt;DeviceID&gt;\d{2})$</code></pre>
+
+        <p><strong>Extracted Tags:</strong></p>
+
+        <ul>
+          <li><code>FacilityType</code>: WHSE (Warehouse)</li>
+          <li><code>LocationCode</code>: DFW (Dallas/Fort Worth)</li>
+          <li><code>Zone</code>: ZONE4</li>
+          <li><code>DeviceType</code>: WLC (Wireless LAN Controller)</li>
+          <li><code>DeviceID</code>: 02</li>
+        </ul>
+
+        <hr />
+
+        <h3>5. Universities &amp; Large Enterprises (Geo-Distributed)</h3>
+
+        <p><strong>Naming Convention:</strong> <code>[Continent]-[Country]-[City]-[Campus]-[DeviceRole]</code><br />
+        <strong>Sample Device Name:</strong> <code>EU-UK-LON-MAIN-FW01</code></p>
+
+        <p><strong>Regex Pattern:</strong></p>
+
+        <pre><code>^(?&lt;Continent&gt;[A-Z]{2})-(?&lt;Country&gt;[A-Z]{2})-(?&lt;City&gt;[A-Z]{3})-(?&lt;Campus&gt;[A-Z]+)-(?&lt;DeviceRole&gt;[A-Z]{2})(?&lt;DeviceID&gt;\d{2})$</code></pre>
+
+        <p><strong>Extracted Tags:</strong></p>
+
+        <ul>
+          <li><code>Continent</code>: EU</li>
+          <li><code>Country</code>: UK</li>
+          <li><code>City</code>: LON</li>
+          <li><code>Campus</code>: MAIN</li>
+          <li><code>DeviceRole</code>: FW (Firewall)</li>
+          <li><code>DeviceID</code>: 01</li>
+        </ul>
+
+        <hr />
+
+        <ul>
+          <li><strong>Optional Groups:</strong> Network naming conventions are notoriously imperfect. Use the <code>?</code> quantifier for optional capturing groups so the regex doesn't fail entirely if a tech forgets a hyphen. Example: <code>-(?&lt;Floor&gt;FL\d{2})?-</code></li>
+          <li><strong>Catch-Alls for Legacy Gear:</strong> For legacy sites that don't match the new standard try using fallback regexes like <code>^(?&lt;SiteID&gt;[A-Z0-9]+)-.*</code> to at least grab the site identifier.</li>
+        </ul>
+      </article>
+    </main>
   </body>
 </html>

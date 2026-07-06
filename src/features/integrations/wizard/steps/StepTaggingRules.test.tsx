@@ -16,19 +16,37 @@ function Harness() {
   </>
 }
 
-test('add a rule and see matching selected sites in preview', async () => {
+test('typing a pattern and clicking Add appends it to the list with a preview', async () => {
   render(<Harness />)
+  // Add rule is disabled until the default input has a pattern.
+  expect(screen.getByRole('button', { name: /add rule/i })).toBeDisabled()
+  await userEvent.type(screen.getByLabelText('Pattern (regex)'), 'sdwan')
   await userEvent.click(screen.getByRole('button', { name: /add rule/i }))
   expect(screen.getByTestId('rules')).toHaveTextContent('1')
-  await userEvent.type(screen.getByLabelText(/pattern/i), 'sdwan')
-  // preview lists matching selected sites/devices
+  // input clears after adding; the list row shows matching selected sites/devices
+  expect(screen.getByLabelText('Pattern (regex)')).toHaveValue('')
   expect(await screen.findByText(/sdwan_atlanta/)).toBeInTheDocument()
   expect(screen.getByText(/sdwan_phoenix/)).toBeInTheDocument()
 })
 
-test('remove a rule', async () => {
+test('edit an existing rule pattern', async () => {
   render(<Harness />)
+  await userEvent.type(screen.getByLabelText('Pattern (regex)'), 'sdwan')
   await userEvent.click(screen.getByRole('button', { name: /add rule/i }))
-  await userEvent.click(screen.getByRole('button', { name: /remove/i }))
+  await userEvent.click(screen.getByRole('button', { name: /edit/i }))
+  await userEvent.clear(screen.getByLabelText('Edit pattern'))
+  await userEvent.type(screen.getByLabelText('Edit pattern'), 'findlay')
+  await userEvent.click(screen.getByRole('button', { name: /save/i }))
+  expect(screen.getByTestId('rules')).toHaveTextContent('1')
+  expect(screen.getByText('findlay')).toBeInTheDocument()
+  expect(screen.queryByText('sdwan')).not.toBeInTheDocument()
+})
+
+test('delete a rule', async () => {
+  render(<Harness />)
+  await userEvent.type(screen.getByLabelText('Pattern (regex)'), 'sdwan')
+  await userEvent.click(screen.getByRole('button', { name: /add rule/i }))
+  expect(screen.getByTestId('rules')).toHaveTextContent('1')
+  await userEvent.click(screen.getByRole('button', { name: /delete/i }))
   expect(screen.getByTestId('rules')).toHaveTextContent('0')
 })
