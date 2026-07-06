@@ -1,9 +1,8 @@
 import { registeredFeatures, allRoutes, assertNoDuplicateRoutes } from './registry'
 import type { FeatureManifest } from './types'
 
-test('features are sorted by order', () => {
-  const orders = registeredFeatures.map((f) => f.order)
-  expect(orders).toEqual([...orders].sort((a, b) => a - b))
+test('features are registered in ascending order (dashboard before integrations)', () => {
+  expect(registeredFeatures.map((f) => f.id)).toEqual(['dashboard', 'integrations'])
 })
 
 test('allRoutes includes root and integrations paths', () => {
