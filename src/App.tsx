@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppShell } from './components/AppShell/AppShell'
-import { DashboardPage } from './pages/DashboardPage'
+import { DashboardPage } from './features/dashboard/DashboardPage'
 import { IntegrationsPage } from './features/integrations/IntegrationsPage'
 
 export default function App() {
