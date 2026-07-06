@@ -3,8 +3,6 @@ export type IntegrationStatus = 'connected' | 'syncing' | 'error'
 export interface TaggingRule {
   id: string
   pattern: string
-  target: 'sites' | 'devices' | 'both'
-  tag: string
 }
 
 export interface ScopeSelection {

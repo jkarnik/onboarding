@@ -21,7 +21,7 @@ test('add a rule and see matching selected sites in preview', async () => {
   await userEvent.click(screen.getByRole('button', { name: /add rule/i }))
   expect(screen.getByTestId('rules')).toHaveTextContent('1')
   await userEvent.type(screen.getByLabelText(/pattern/i), 'sdwan')
-  // target defaults to sites; preview lists matching selected sites
+  // preview lists matching selected sites/devices
   expect(await screen.findByText(/sdwan_atlanta/)).toBeInTheDocument()
   expect(screen.getByText(/sdwan_phoenix/)).toBeInTheDocument()
 })

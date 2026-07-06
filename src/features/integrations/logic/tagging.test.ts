@@ -10,16 +10,14 @@ test('compileRegex returns null on invalid pattern', () => {
   expect(compileRegex('sdwan_.*')).toBeInstanceOf(RegExp)
 })
 
-test('matchTagging only considers selected items and respects target', () => {
+test('matchTagging matches selected sites and devices by name', () => {
   const sel = toggleOrg(tree, emptySelection(), 'o1', true) // selects o1 sites+devices
-  const rule = { id: 'r1', pattern: 'sdwan', target: 'sites' as const, tag: 'wan' }
-  const m = matchTagging(rule, sel, tree)
+  const m = matchTagging({ id: 'r1', pattern: 'sdwan' }, sel, tree)
   expect(m.sites).toEqual(expect.arrayContaining(['sdwan_atlanta', 'sdwan_phoenix']))
-  expect(m.devices).toHaveLength(0)
+  expect(m.devices).toEqual(expect.arrayContaining(['node0.sdwan-atlanta']))
 })
 
 test('matchTagging ignores unselected items', () => {
   const sel = emptySelection() // nothing selected
-  const rule = { id: 'r1', pattern: '.*', target: 'both' as const, tag: 'all' }
-  expect(matchTagging(rule, sel, tree)).toEqual({ sites: [], devices: [] })
+  expect(matchTagging({ id: 'r1', pattern: '.*' }, sel, tree)).toEqual({ sites: [], devices: [] })
 })

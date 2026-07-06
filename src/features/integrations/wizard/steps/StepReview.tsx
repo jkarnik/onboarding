@@ -20,7 +20,7 @@ export function StepReview({ draft, onEditStep }: { draft: WizardDraft; onEditSt
       <Row label="Connection" onEdit={() => onEditStep('connect')}>Token {masked} · {draft.connection.region.toUpperCase()}</Row>
       <Row label="Scope" onEdit={() => onEditStep('scope')}>{summary}</Row>
       <Row label="Tagging rules" onEdit={() => onEditStep('tagging')}>
-        {draft.taggingRules.length ? draft.taggingRules.map((r) => `${r.tag} (/${r.pattern}/)`).join(', ') : 'None'}
+        {draft.taggingRules.length ? draft.taggingRules.map((r) => `/${r.pattern}/`).join(', ') : 'None'}
       </Row>
     </div>
   )

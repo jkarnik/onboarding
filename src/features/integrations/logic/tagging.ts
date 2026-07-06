@@ -11,13 +11,9 @@ export function matchTagging(rule: TaggingRule, sel: ScopeSelection, tree: OrgNo
   const devices: string[] = []
   for (const org of tree) {
     for (const site of org.sites) {
-      if ((rule.target === 'sites' || rule.target === 'both') && sel.siteIds.includes(site.id) && re.test(site.name)) {
-        sites.push(site.name)
-      }
-      if (rule.target === 'devices' || rule.target === 'both') {
-        for (const dev of site.devices) {
-          if (sel.deviceIds.includes(dev.id) && re.test(dev.name)) devices.push(dev.name)
-        }
+      if (sel.siteIds.includes(site.id) && re.test(site.name)) sites.push(site.name)
+      for (const dev of site.devices) {
+        if (sel.deviceIds.includes(dev.id) && re.test(dev.name)) devices.push(dev.name)
       }
     }
   }
